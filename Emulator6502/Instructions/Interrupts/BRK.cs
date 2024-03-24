@@ -15,6 +15,7 @@ namespace Emulator6502.Instructions.Interrupts
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
+            throw new NotImplementedException("Unfinished");
             cpu.ReadMemoryValue(++cpu.ProgramCounter);
 
             // put the high value on the stack
@@ -23,7 +24,7 @@ namespace Emulator6502.Instructions.Interrupts
             cpu.StackPointer--;
             
             // put low value onto stack
-            cpu.PokeStack((byte)(ConvertFlagsToByte))
+            //cpu.PokeStack((byte)(ConvertFlagsToByte))
         }
     }
 }
