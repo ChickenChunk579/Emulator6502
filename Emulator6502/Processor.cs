@@ -1,5 +1,6 @@
 ﻿using Emulator6502.BusDevices;
 using Emulator6502.Instructions;
+using Emulator6502.Instructions.Loads;
 using Serilog;
 using Serilog.Core;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,16 +45,41 @@ namespace Emulator6502
         public bool CarryFlag { get; set; }
         public bool ZeroFlag { get; set; }
         public bool DisableInterruptsFlag { get; set; }
+        public bool BreakFlag {get; set;}
         public bool DecimalFlag { get; set; }
         public bool UnusedFlag { get; set; }
         public bool OverflowFlag { get; set; }
         public bool NegativeFlag { get; set; }
+
+        public byte GetFlagByte()
+        {
+            byte sr = 0x0;
+
+            sr = sr.SetFlag(Flags.CarryBit, CarryFlag);
+            sr = sr.SetFlag(Flags.Zero, ZeroFlag);
+            sr = sr.SetFlag(Flags.DisableInterrupts, DisableInterruptsFlag);
+            sr = sr.SetFlag(Flags.Break, BreakFlag);
+            sr = sr.SetFlag(Flags.Decimal, DecimalFlag);
+            sr = sr.SetFlag(Flags.Unused, UnusedFlag);
+            sr = sr.SetFlag(Flags.Overflow, OverflowFlag);
+            sr = sr.SetFlag(Flags.Negative, NegativeFlag);
+
+            return sr;
+        }
 
         #endregion
 
         public int CyclesLeft { get; set; }
 
         private List<IInstruction> instructions;
+
+        public ushort ReadIRQVector()
+        {
+            var highByte = ReadMemoryValue(0xFFFE);
+            var lowByte = ReadMemoryValue(0xFFFF);
+
+            return BitConverter.ToUInt16([highByte, lowByte]);
+        }
 
         // Reads an address from memory via the bus
         public byte ReadMemoryValue(int address)
@@ -244,7 +271,7 @@ namespace Emulator6502
         public void PokeStack(byte value)
         {
             Bus.Write(StackPointer + 0x100, value);
-        }
+        }     
 
         // read a value from the sack without changing the stack pointer
         public byte PeekStack()
@@ -261,12 +288,12 @@ namespace Emulator6502
             if (!reset) return;
 
             // get parts of initial pc
-            byte[] intialPcBytes = BitConverter.GetBytes(initialProgramCounter);
+            byte[] initialPcBytes = BitConverter.GetBytes(initialProgramCounter);
 
 
             // write bytes to reset vector
-            WriteMemoryValue(0xFFFC, intialPcBytes[0]);
-            WriteMemoryValue(0xFFFF, intialPcBytes[1]);
+            WriteMemoryValue(0xFFFC, initialPcBytes[0]);
+            WriteMemoryValue(0xFFFD, initialPcBytes[1]);
             
             // reset
             Reset();
@@ -322,6 +349,9 @@ namespace Emulator6502
                 {
                     CurrentInstruction = instruction;
                     CurrentOpCode = opcode;
+                    break;
+                }
+                if (CurrentInstruction is not null) {
                     break;
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,16 +16,17 @@ namespace Emulator6502.Instructions.Interrupts
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
-            throw new NotImplementedException("Unfinished");
-            cpu.ReadMemoryValue(++cpu.ProgramCounter);
+            var resetVector = cpu.ReadIRQVector();
 
-            // put the high value on the stack
-            // when we RTI, the address will be incremented by one, and the address after a break will not be used
-            cpu.PokeStack((byte)((cpu.ProgramCounter >> 8) & 0xFF));
-            cpu.StackPointer--;
-            
-            // put low value onto stack
-            //cpu.PokeStack((byte)(ConvertFlagsToByte))
+            var bytes = BitConverter.GetBytes(cpu.ProgramCounter+1);
+            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, bytes[1]);
+            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, bytes[0]);
+
+            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, cpu.GetFlagByte().SetFlag(Flags.Break,true));
+
+            cpu.DisableInterruptsFlag = true;
+             
+            cpu.ProgramCounter = resetVector;            
         }
     }
 }
