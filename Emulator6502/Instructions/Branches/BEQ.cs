@@ -11,7 +11,7 @@ namespace Emulator6502.Instructions.Branches
     {
         public List<Opcode> Opcodes => new List<Opcode>
         {
-            new Opcode("BEQ", AddressingMode.Relative, 0xF0)
+            new Opcode("BEQ", AddressingMode.Relative, 0xF0, 2, 1)
         };
 
         // branches if zero (equal) is set

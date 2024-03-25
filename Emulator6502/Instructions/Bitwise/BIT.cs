@@ -10,9 +10,9 @@ namespace Emulator6502.Instructions.Bitwise
     {
         public List<Opcode> Opcodes => new List<Opcode>()
         {
-            new Opcode("BIT", AddressingMode.ZeroPage, 0x24),
+            new Opcode("BIT", AddressingMode.ZeroPage, 0x24, 3),
 
-            new Opcode("BIT", AddressingMode.Absolute, 0x2C),
+            new Opcode("BIT", AddressingMode.Absolute, 0x2C, 4),
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

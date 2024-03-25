@@ -11,7 +11,7 @@ namespace Emulator6502.Instructions.Branches
     {
         public List<Opcode> Opcodes => new List<Opcode>
         {
-            new Opcode("BPL", AddressingMode.Relative, 0x10)
+            new Opcode("BPL", AddressingMode.Relative, 0x10, 2, 1)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

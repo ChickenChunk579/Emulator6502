@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Emulator6502.Instructions.Loads
+﻿namespace Emulator6502.Instructions.Loads
 {
     public class LDA : IInstruction
     {
@@ -15,17 +7,17 @@ namespace Emulator6502.Instructions.Loads
         {
             get => new List<Opcode>()
             {
-                new Opcode("LDA", AddressingMode.IndirectX, 0xA1),
-                new Opcode("LDA", AddressingMode.IndirectY, 0xB1),
+                new Opcode("LDA", AddressingMode.IndirectX, 0xA1, 6),
+                new Opcode("LDA", AddressingMode.IndirectY, 0xB1, 5),
 
-                new Opcode("LDA", AddressingMode.ZeroPage, 0xA5),
-                new Opcode("LDA", AddressingMode.ZeroPageX, 0xB5),
+                new Opcode("LDA", AddressingMode.ZeroPage, 0xA5, 3),
+                new Opcode("LDA", AddressingMode.ZeroPageX, 0xB5, 4),
 
-                new Opcode("LDA", AddressingMode.AbsoluteX, 0xBD),
-                new Opcode("LDA", AddressingMode.AbsoluteY, 0xB9),
+                new Opcode("LDA", AddressingMode.AbsoluteX, 0xBD, 4),
+                new Opcode("LDA", AddressingMode.AbsoluteY, 0xB9, 4),
 
-                new Opcode("LDA", AddressingMode.Absolute, 0xAD),
-                new Opcode("LDA", AddressingMode.Immediate, 0xA9),
+                new Opcode("LDA", AddressingMode.Absolute, 0xAD, 4),
+                new Opcode("LDA", AddressingMode.Immediate, 0xA9, 2),
 
             };
         }

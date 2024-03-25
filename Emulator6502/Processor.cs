@@ -83,7 +83,7 @@ namespace Emulator6502
             Logger.Debug("Reset complete");
         }
 
-                public void LoadProgram(int offset, byte[] program, int initialProgramCounter, bool reset = true)
+        public void LoadProgram(int offset, byte[] program, int initialProgramCounter, bool reset = true)
         {
             // load code into memory
             LoadProgram(offset, program);

@@ -11,7 +11,7 @@ namespace Emulator6502.Instructions.Interrupts
     {
         public List<Opcode> Opcodes => new List<Opcode>
         {
-            new Opcode("BRK", AddressingMode.Implied, 0x00)
+            new Opcode("BRK", AddressingMode.Implied, 0x00, 7)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

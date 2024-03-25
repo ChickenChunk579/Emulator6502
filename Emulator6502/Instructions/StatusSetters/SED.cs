@@ -5,7 +5,7 @@ namespace Emulator6502.Instructions.StatusSetters
     {
         public List<Opcode> Opcodes => new List<Opcode>
         {
-            new Opcode("SED", AddressingMode.Implied, 0xF8)
+            new Opcode("SED", AddressingMode.Implied, 0xF8, 2)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

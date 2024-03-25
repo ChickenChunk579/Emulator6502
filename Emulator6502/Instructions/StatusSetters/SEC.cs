@@ -11,7 +11,7 @@ namespace Emulator6502.Instructions.StatusSetters
     {
         public List<Opcode> Opcodes => new List<Opcode>
         {
-            new Opcode("SEC", AddressingMode.Implied, 0x38)
+            new Opcode("SEC", AddressingMode.Implied, 0x38, 2)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
