@@ -28,6 +28,13 @@ NOTE - still in very early stages of development
 * CMP (Compare accumulator)
 * CMX (Comapre X Register)
 * CMY (Compare Y Register)
+* EOR (Exclusive OR)
+* DEC (Decrement memory value)
+* DEX (Decrement X)
+* DEY (Decrement Y)
+* INC (Increment memory value)
+* INX (Increment x register)
+* INY (Increment y register)
 
 ## Features
 * Unit tests (based on [sim6502](https://github.com/barryw/sim6502/blob/master/sim6502tests/ProcessorTests.cs/) tests)
