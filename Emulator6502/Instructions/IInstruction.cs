@@ -4,6 +4,6 @@
     {
         public List<Operation> Opcodes { get; }
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu);
+        public void Execute(Operation operation, Processor cpu);
     }
 }

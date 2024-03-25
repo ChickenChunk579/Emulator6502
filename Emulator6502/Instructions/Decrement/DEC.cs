@@ -18,9 +18,9 @@ namespace Emulator6502.Instructions.Decrement
             new Operation("DEC", AddressingMode.AbsoluteX, OpcodeEnum.DEC_ABSX, 7),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
-            int addressToDec = cpu.GetAddressByAddressingMode(addressingMode);
+            int addressToDec = cpu.GetAddressByAddressingMode(operation.AddressingMode);
             byte result = (byte)(cpu.ReadMemoryValue(addressToDec) - 1);
 
             cpu.WriteMemoryValue(addressToDec, result);

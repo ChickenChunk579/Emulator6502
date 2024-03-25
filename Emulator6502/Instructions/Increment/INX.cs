@@ -14,7 +14,7 @@ namespace Emulator6502.Instructions.Decrement
             new Operation("INX", AddressingMode.Implied, OpcodeEnum.INX, 2),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             int valueToInc = cpu.XRegister;
             byte result = (byte)(valueToInc + 1);

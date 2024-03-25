@@ -8,7 +8,7 @@
             new Operation("CLV", AddressingMode.Implied, OpcodeEnum.CLV, 2)
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             cpu.SR.OverflowFlag = false;
         }

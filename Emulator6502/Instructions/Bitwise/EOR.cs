@@ -20,9 +20,9 @@ namespace Emulator6502.Instructions.Bitwise
             new Operation("EOR", AddressingMode.IndirectY, OpcodeEnum.EOR_INDY, 5),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
-            cpu.Accumulator ^= cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
+            cpu.Accumulator ^= cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
 
             cpu.SR.SetNegativeFlagByResult(cpu.Accumulator);
             cpu.SR.SetZeroFlagByResult(cpu.Accumulator);

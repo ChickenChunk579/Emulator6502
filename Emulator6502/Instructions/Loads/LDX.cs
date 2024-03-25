@@ -18,11 +18,11 @@ namespace Emulator6502.Instructions.Loads
             };
         }
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
 
             // Read in byte from memory and set accumulator value to it
-            cpu.XRegister = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
+            cpu.XRegister = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
 
             // Set zero flag based on value of accumulator
             cpu.SR.SetZeroFlagByResult(cpu.Accumulator);

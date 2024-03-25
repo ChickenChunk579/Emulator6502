@@ -8,7 +8,7 @@ namespace Emulator6502.Instructions.StatusSetters
             new Operation("SEI", AddressingMode.Implied, OpcodeEnum.SEI, 2)
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             cpu.SR.DisableInterruptsFlag = true;
         }

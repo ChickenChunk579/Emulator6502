@@ -23,10 +23,10 @@ namespace Emulator6502.Instructions.Arithmatic
             new Operation("ADC", AddressingMode.IndirectX, OpcodeEnum.ADC_INDX, 5),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             // read operand
-            var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
+            var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
 
             // perform calculation
             var newValue = memoryValue + cpu.Accumulator + (cpu.SR.CarryFlag ? 1 : 0);

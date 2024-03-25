@@ -7,7 +7,7 @@
             new Operation("BRK", AddressingMode.Implied, OpcodeEnum.BRK, 7)
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             var resetVector = cpu.ReadIRQVector();
 

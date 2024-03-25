@@ -14,7 +14,7 @@ namespace Emulator6502.Instructions.Decrement
             new Operation("DEX", AddressingMode.Implied, OpcodeEnum.DEX, 2),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             int valueToDec = cpu.XRegister;
             byte result = (byte)(valueToDec - 1);

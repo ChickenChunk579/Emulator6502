@@ -8,7 +8,7 @@
             new Operation("CLI", AddressingMode.Implied, OpcodeEnum.CLI, 2)
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             cpu.SR.DisableInterruptsFlag = false;
         }

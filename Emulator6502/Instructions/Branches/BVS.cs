@@ -8,13 +8,13 @@
             new Operation("BVS", AddressingMode.Relative, OpcodeEnum.BVS, 2, 1)
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             // check if overflow is set
             if (cpu.SR.OverflowFlag)
             {
                 // perform branch
-                Common.PerformBranch(opcode, addressingMode, cpu);
+                Common.PerformBranch(operation, cpu);
             }
         }
     }

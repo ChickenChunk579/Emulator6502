@@ -2,9 +2,9 @@
 {
     public static class Common
     {
-        public static void PerformBranch(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public static void PerformBranch(Operation operation, Processor cpu)
         {
-            int addressOffset = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
+            int addressOffset = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
 
             cpu.MoveProgramCounterByRelativeValue(addressOffset);
         }

@@ -17,9 +17,9 @@ namespace Emulator6502.Instructions.Comparison
             new Operation("CPY", AddressingMode.Absolute, OpcodeEnum.CPY_ABS, 4),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
-            Common.Compare(cpu, addressingMode, cpu.YRegister);
+            Common.Compare(cpu, operation.AddressingMode, cpu.YRegister);
         }
     }
 }

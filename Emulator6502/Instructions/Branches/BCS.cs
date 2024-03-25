@@ -9,13 +9,13 @@
             new Operation("BCS", AddressingMode.Relative, OpcodeEnum.BCS, 2, 1)
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             // check if carry bit is set
             if (cpu.SR.CarryFlag)
             {
                 // perform branch
-                Common.PerformBranch(opcode, addressingMode, cpu);
+                Common.PerformBranch(operation, cpu);
             }
         }
     }

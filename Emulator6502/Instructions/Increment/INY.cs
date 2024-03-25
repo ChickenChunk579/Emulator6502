@@ -14,7 +14,7 @@ namespace Emulator6502.Instructions.Decrement
             new Operation("INY", AddressingMode.Implied, OpcodeEnum.INY, 2),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
             int valueToInc = cpu.YRegister;
             byte result = (byte)(valueToInc + 1);

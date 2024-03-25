@@ -18,9 +18,9 @@ namespace Emulator6502.Instructions.Increment
             new Operation("INC", AddressingMode.AbsoluteX, OpcodeEnum.INC_ABSX, 7),
         };
 
-        public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
+        public void Execute(Operation operation, Processor cpu)
         {
-            int addressToInc = cpu.GetAddressByAddressingMode(addressingMode);
+            int addressToInc = cpu.GetAddressByAddressingMode(operation.AddressingMode);
             byte result = (byte)(cpu.ReadMemoryValue(addressToInc) + 1);
 
             cpu.WriteMemoryValue(addressToInc, result);

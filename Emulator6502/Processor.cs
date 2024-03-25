@@ -127,7 +127,7 @@ namespace Emulator6502
 
             ProgramCounter++;
 
-            CurrentInstruction.Execute(CurrentOperation.OpcodeByte, CurrentOperation.AddressingMode, this);
+            CurrentInstruction.Execute(CurrentOperation, this);
 
             // TODO: add interrupts
         }
