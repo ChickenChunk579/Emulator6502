@@ -1,3 +1,5 @@
+using Emulator6502.Instructions.Bitwise;
+
 namespace Emulator6502.Instructions.StatusSetters
 {
     // set interrupds
@@ -5,7 +7,7 @@ namespace Emulator6502.Instructions.StatusSetters
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("SEI", AddressingMode.Implied, OpcodeEnum.SEI, 2)
+            new Operation("SEI", AddressModeExtensions.GetImpliedAddress, OpcodeEnum.SEI, 2)
         };
 
         public void Execute(Operation operation, Processor cpu)

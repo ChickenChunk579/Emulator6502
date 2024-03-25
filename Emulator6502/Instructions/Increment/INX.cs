@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Emulator6502.Instructions.Bitwise;
 
 namespace Emulator6502.Instructions.Decrement
 {
@@ -11,7 +7,7 @@ namespace Emulator6502.Instructions.Decrement
     {
         public List<Operation> Opcodes => new List<Operation>()
         {
-            new Operation("INX", AddressingMode.Implied, OpcodeEnum.INX, 2),
+            new Operation("INX", AddressModeExtensions.GetImpliedAddress, OpcodeEnum.INX, 2),
         };
 
         public void Execute(Operation operation, Processor cpu)

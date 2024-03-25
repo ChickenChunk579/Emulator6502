@@ -1,11 +1,13 @@
-﻿namespace Emulator6502.Instructions.Branches
+﻿using Emulator6502.Instructions.Bitwise;
+
+namespace Emulator6502.Instructions.Branches
 {
     // branch equal / zero
     public class BEQ : IInstruction
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("BEQ", AddressingMode.Relative, OpcodeEnum.BEQ, 2, 1)
+            new Operation("BEQ", AddressModeExtensions.GetRelativeAddress, OpcodeEnum.BEQ, 2, 1)
         };
 
         // branches if zero (equal) is set

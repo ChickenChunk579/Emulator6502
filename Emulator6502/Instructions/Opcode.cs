@@ -4,7 +4,7 @@
     public class Operation
     {
         public string Name { get; set; }
-        public AddressingMode AddressingMode { get; set; }
+        public Func<Processor, Operation, int> AddressingModeFunction { get; set; }
 
         public OpcodeEnum OpcodeEnum { get; set; }
         public byte OpcodeByte => (byte)OpcodeEnum;
@@ -13,10 +13,10 @@
         public short ExtraCyclesOnPageBoundry {get; set;}
         public int TotalCycles {get => Cycles + ExtraCyclesOnPageBoundry; }
 
-        public Operation(string name, AddressingMode addressingMode, OpcodeEnum opcodeEnum, short cycles, short extraCycles = 0)
+        public Operation(string name, Func<Processor, Operation, int> addressingMode, OpcodeEnum opcodeEnum, short cycles, short extraCycles = 0)
         {
             Name = name;
-            AddressingMode = addressingMode;
+            AddressingModeFunction = addressingMode;
             OpcodeEnum = opcodeEnum;
             
             Cycles = cycles;

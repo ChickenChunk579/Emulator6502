@@ -1,11 +1,13 @@
-﻿namespace Emulator6502.Instructions.Branches
+﻿using Emulator6502.Instructions.Bitwise;
+
+namespace Emulator6502.Instructions.Branches
 {
     // branch result not zero (not equal)
     public class BNE : IInstruction
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("BNE", AddressingMode.Relative, OpcodeEnum.BNE, 2, 1)
+            new Operation("BNE", AddressModeExtensions.GetRelativeAddress, OpcodeEnum.BNE, 2, 1)
         };
 
         public void Execute(Operation operation, Processor cpu)

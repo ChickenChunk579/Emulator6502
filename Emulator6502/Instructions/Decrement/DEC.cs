@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Emulator6502.Instructions.Bitwise;
 
 namespace Emulator6502.Instructions.Decrement
 {
@@ -11,19 +7,20 @@ namespace Emulator6502.Instructions.Decrement
     {
         public List<Operation> Opcodes => new List<Operation>()
         {
-            new Operation("DEC", AddressingMode.ZeroPage, OpcodeEnum.DEC_ZP, 5),
-            new Operation("DEC", AddressingMode.ZeroPageX, OpcodeEnum.DEC_ZPX, 6),
+            new Operation("DEC", AddressModeExtensions.GetZeroPageAddress, OpcodeEnum.DEC_ZP, 5),
+            new Operation("DEC", AddressModeExtensions.GetZeroPageXAddress, OpcodeEnum.DEC_ZPX, 6),
 
-            new Operation("DEC", AddressingMode.Absolute, OpcodeEnum.DEC_ABS, 6),
-            new Operation("DEC", AddressingMode.AbsoluteX, OpcodeEnum.DEC_ABSX, 7),
+            new Operation("DEC", AddressModeExtensions.GetAbsoluteAddress, OpcodeEnum.DEC_ABS, 6),
+            new Operation("DEC", AddressModeExtensions.GetAbsoluteXAddress, OpcodeEnum.DEC_ABSX, 7),
         };
 
         public void Execute(Operation operation, Processor cpu)
         {
-            int addressToDec = cpu.GetAddressForOperation(operation);
-            byte result = (byte)(cpu.ReadMemoryValue(addressToDec) - 1);
+            var address = operation.AddressingModeFunction.Invoke(cpu, operation);
 
-            cpu.WriteMemoryValue(addressToDec, result);
+            byte result = (byte)(cpu.ReadMemoryValue(address) - 1);
+
+            cpu.WriteMemoryValue(address, result);
 
             cpu.SR.SetNegativeFlagByResult(result);
             cpu.SR.SetZeroFlagByResult(result);

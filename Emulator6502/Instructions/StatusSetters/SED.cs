@@ -1,3 +1,5 @@
+using Emulator6502.Instructions.Bitwise;
+
 namespace Emulator6502.Instructions.StatusSetters
 {
     // set decimal
@@ -5,7 +7,7 @@ namespace Emulator6502.Instructions.StatusSetters
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("SED", AddressingMode.Implied, OpcodeEnum.SED, 2)
+            new Operation("SED", AddressModeExtensions.GetImpliedAddress, OpcodeEnum.SED, 2)
         };
 
         public void Execute(Operation operation, Processor cpu)
