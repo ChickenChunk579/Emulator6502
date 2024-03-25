@@ -4,7 +4,7 @@
     {
         public static void PerformBranch(Operation operation, Processor cpu)
         {
-            int addressOffset = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
+            int addressOffset = cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
 
             cpu.MoveProgramCounterByRelativeValue(addressOffset);
         }

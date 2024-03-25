@@ -19,7 +19,7 @@ namespace Emulator6502.Instructions.Comparison
 
         public void Execute(Operation operation, Processor cpu)
         {
-            Common.Compare(cpu, operation.AddressingMode, cpu.YRegister);
+            Common.Compare(operation, cpu, cpu.YRegister);
         }
     }
 }

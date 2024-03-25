@@ -8,9 +8,9 @@ namespace Emulator6502.Instructions.Comparison
 {
     public class Common
     {
-        public static void Compare(Processor cpu, AddressingMode mode, int value)
+        public static void Compare(Operation operation, Processor cpu, int value)
         {
-            var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(mode));
+            var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
             var comparedValue = value - memoryValue;
 
             if (comparedValue < 0)

@@ -22,7 +22,7 @@ namespace Emulator6502.Instructions.Comparison
 
         public void Execute(Operation operation, Processor cpu)
         {
-            Common.Compare(cpu, operation.AddressingMode, cpu.Accumulator);
+            Common.Compare(operation, cpu, cpu.Accumulator);
         }
     }
 }

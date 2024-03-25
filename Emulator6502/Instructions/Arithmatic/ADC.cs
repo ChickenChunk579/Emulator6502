@@ -26,7 +26,7 @@ namespace Emulator6502.Instructions.Arithmatic
         public void Execute(Operation operation, Processor cpu)
         {
             // read operand
-            var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
+            var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
 
             // perform calculation
             var newValue = memoryValue + cpu.Accumulator + (cpu.SR.CarryFlag ? 1 : 0);

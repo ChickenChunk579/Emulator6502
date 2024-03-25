@@ -20,7 +20,7 @@ namespace Emulator6502.Instructions.Increment
 
         public void Execute(Operation operation, Processor cpu)
         {
-            int addressToInc = cpu.GetAddressByAddressingMode(operation.AddressingMode);
+            int addressToInc = cpu.GetAddressForOperation(operation);
             byte result = (byte)(cpu.ReadMemoryValue(addressToInc) + 1);
 
             cpu.WriteMemoryValue(addressToInc, result);

@@ -15,7 +15,7 @@ namespace Emulator6502.Instructions.Bitwise
 
         public void Execute(Operation operation, Processor cpu)
         {
-            byte memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
+            byte memoryValue = cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
             int valueToCompare = memoryValue & cpu.Accumulator;
 
             cpu.SR.OverflowFlag = (memoryValue & 0x40) != 0;

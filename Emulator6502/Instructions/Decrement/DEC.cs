@@ -20,7 +20,7 @@ namespace Emulator6502.Instructions.Decrement
 
         public void Execute(Operation operation, Processor cpu)
         {
-            int addressToDec = cpu.GetAddressByAddressingMode(operation.AddressingMode);
+            int addressToDec = cpu.GetAddressForOperation(operation);
             byte result = (byte)(cpu.ReadMemoryValue(addressToDec) - 1);
 
             cpu.WriteMemoryValue(addressToDec, result);

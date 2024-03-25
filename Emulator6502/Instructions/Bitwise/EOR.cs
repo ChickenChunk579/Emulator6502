@@ -22,7 +22,7 @@ namespace Emulator6502.Instructions.Bitwise
 
         public void Execute(Operation operation, Processor cpu)
         {
-            cpu.Accumulator ^= cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
+            cpu.Accumulator ^= cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
 
             cpu.SR.SetNegativeFlagByResult(cpu.Accumulator);
             cpu.SR.SetZeroFlagByResult(cpu.Accumulator);

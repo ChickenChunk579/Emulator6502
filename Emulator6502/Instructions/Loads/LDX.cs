@@ -22,7 +22,7 @@ namespace Emulator6502.Instructions.Loads
         {
 
             // Read in byte from memory and set accumulator value to it
-            cpu.XRegister = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(operation.AddressingMode));
+            cpu.XRegister = cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
 
             // Set zero flag based on value of accumulator
             cpu.SR.SetZeroFlagByResult(cpu.Accumulator);

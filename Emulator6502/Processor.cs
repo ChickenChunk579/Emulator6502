@@ -156,11 +156,12 @@ namespace Emulator6502
         }
 
         // takes an addressing mode and reads an address for that instruction
-        public int GetAddressByAddressingMode(AddressingMode addressingMode)
+        public int GetAddressForOperation(Operation operation)
         {
             int lowByte;
             int highByte;
-            switch (addressingMode)
+
+            switch (operation.AddressingMode)
             {
                 case AddressingMode.Absolute:
                     {
@@ -279,7 +280,7 @@ namespace Emulator6502
                     }
                 default:
                     throw new InvalidOperationException(
-                        $"The Address Mode '{addressingMode}' does not require an address");
+                        $"The Address Mode '{operation.AddressingMode}' does not require an address");
             }
         }
 
