@@ -32,22 +32,6 @@ namespace Emulator6502
         public bool OverflowFlag { get; set; }
         public bool NegativeFlag { get; set; }
 
-        public byte GetFlagByte()
-        {
-            byte sr = 0x0;
-
-            sr.SetFlag(Flags.CarryBit, CarryFlag);
-            sr.SetFlag(Flags.Zero, ZeroFlag);
-            sr.SetFlag(Flags.DisableInterrupts, DisableInterruptsFlag);
-            sr.SetFlag(Flags.Break, BreakFlag);
-            sr.SetFlag(Flags.Decimal, DecimalFlag);
-            sr.SetFlag(Flags.Unused, UnusedFlag);
-            sr.SetFlag(Flags.Overflow, OverflowFlag);
-            sr.SetFlag(Flags.Negative, NegativeFlag);
-
-            return sr;
-        }
-
         #endregion
 
         public int CyclesLeft { get; set; }
@@ -55,6 +39,110 @@ namespace Emulator6502
         private List<IInstruction> instructions = [];
 
         private Dictionary<Opcode, IInstruction> opcodeLookup = [];
+
+        public Processor(bool addRAM = true)
+        {
+            // create logger
+            Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("cpu.log")
+                .MinimumLevel.Debug()
+                .CreateLogger();
+
+            ConfigureInstructions();
+
+            Bus = new Bus();
+
+            if (addRAM)
+            {
+                Bus.Devices.Add(new RAM());
+            }
+        }
+
+        // resets the cpu to a known state
+        public void Reset()
+        {
+            Logger.Debug("6502 reset");
+
+            // set stack pointer correctly
+            StackPointer = 0xFD;
+
+            // load the address from the reset vector
+            // set pc to reset vector address
+            ProgramCounter = 0xFFFC;
+
+            // reset pc to addres in the reset vector
+            ProgramCounter = ReadMemoryValue(ProgramCounter) | (ReadMemoryValue(ProgramCounter + 1) << 8);
+
+            // reset current opcode and instruction
+            CurrentOpCode = null;
+            CurrentInstruction = null;
+
+            // TODO: add interrupts
+
+            Logger.Debug("Reset complete");
+        }
+
+                public void LoadProgram(int offset, byte[] program, int initialProgramCounter, bool reset = true)
+        {
+            // load code into memory
+            LoadProgram(offset, program);
+
+            // exit if no reset
+            if (!reset) return;
+
+            // get parts of initial pc
+            byte[] initialPcBytes = BitConverter.GetBytes(initialProgramCounter);
+
+            // write bytes to reset vector
+            WriteMemoryValue(0xFFFC, initialPcBytes[0]);
+            WriteMemoryValue(0xFFFD, initialPcBytes[1]);
+            
+            // reset
+            Reset();
+        }
+
+        public void LoadProgram(int offset, byte[] program)
+        {
+            // sanity checks to confirm code will fit
+            if (offset > 0xFFFF)
+            {
+                throw new InvalidOperationException("Invalid offset - too large");
+            }
+
+            if (program.Length > 0xFFFF + offset)
+            {
+                throw new InvalidOperationException("Program size is larger than addressable space");
+            }
+
+            // loop over bytes and write them to memory
+            for (int i = 0; i < program.Length; i++) WriteMemoryValue(i + offset, program[i]);
+        }
+
+        public void NextStep()
+        {
+            byte opcodeByte = ReadMemoryValue(ProgramCounter);
+
+            var opcodeLookup = this.opcodeLookup.Where(op => op.Key.OpcodeByte == opcodeByte);
+
+            if (opcodeLookup.Count() == 0)
+            {
+                throw new NotSupportedException($"Unsupported or illegal opcode {opcodeByte:X2}");
+            }
+
+            var opcode = opcodeLookup.Single();
+
+            CurrentOpCode = opcode.Key;
+            CurrentInstruction = opcode.Value;
+
+            Logger.Information($"Executing instruction {CurrentOpCode.Name}");
+
+            ProgramCounter++;
+
+            CurrentInstruction.Execute(CurrentOpCode.OpcodeByte, CurrentOpCode.AddressingMode, this);
+
+            // TODO: add interrupts
+        }
 
         public ushort ReadIRQVector()
         {
@@ -261,109 +349,21 @@ namespace Emulator6502
         {
             return Bus.Read(StackPointer + 0x100);
         }
-
-        public void LoadProgram(int offset, byte[] program, int initialProgramCounter, bool reset = true)
+        
+        public byte GetFlagByte()
         {
-            // load code into memory
-            LoadProgram(offset, program);
+            byte sr = 0x0;
 
-            // exit if no reset
-            if (!reset) return;
+            sr.SetFlag(Flags.CarryBit, CarryFlag);
+            sr.SetFlag(Flags.Zero, ZeroFlag);
+            sr.SetFlag(Flags.DisableInterrupts, DisableInterruptsFlag);
+            sr.SetFlag(Flags.Break, BreakFlag);
+            sr.SetFlag(Flags.Decimal, DecimalFlag);
+            sr.SetFlag(Flags.Unused, UnusedFlag);
+            sr.SetFlag(Flags.Overflow, OverflowFlag);
+            sr.SetFlag(Flags.Negative, NegativeFlag);
 
-            // get parts of initial pc
-            byte[] initialPcBytes = BitConverter.GetBytes(initialProgramCounter);
-
-            // write bytes to reset vector
-            WriteMemoryValue(0xFFFC, initialPcBytes[0]);
-            WriteMemoryValue(0xFFFD, initialPcBytes[1]);
-            
-            // reset
-            Reset();
-        }
-
-        public void LoadProgram(int offset, byte[] program)
-        {
-            // sanity checks to confirm code will fit
-            if (offset > 0xFFFF)
-            {
-                throw new InvalidOperationException("Invalid offset - too large");
-            }
-
-            if (program.Length > 0xFFFF + offset)
-            {
-                throw new InvalidOperationException("Program size is larger than addressable space");
-            }
-
-            // loop over bytes and write them to memory
-            for (int i = 0; i < program.Length; i++) WriteMemoryValue(i + offset, program[i]);
-        }
-
-        // resets the cpu to a known state
-        public void Reset()
-        {
-            Logger.Debug("6502 reset");
-
-            // set stack pointer correctly
-            StackPointer = 0xFD;
-
-            // load the address from the reset vector
-            // set pc to reset vector address
-            ProgramCounter = 0xFFFC;
-
-            // reset pc to addres in the reset vector
-            ProgramCounter = ReadMemoryValue(ProgramCounter) | (ReadMemoryValue(ProgramCounter + 1) << 8);
-
-            // reset current opcode and instruction
-            CurrentOpCode = null;
-            CurrentInstruction = null;
-
-            // TODO: add interrupts
-
-            Logger.Debug("Reset complete");
-        }
-
-        public void NextStep()
-        {
-            byte opcodeByte = ReadMemoryValue(ProgramCounter);
-
-            var opcodeLookup = this.opcodeLookup.Where(op => op.Key.OpcodeByte == opcodeByte);
-
-            if (opcodeLookup.Count() == 0)
-            {
-                throw new NotSupportedException($"Unsupported or illegal opcode {opcodeByte:X2}");
-            }
-
-            var opcode = opcodeLookup.Single();
-
-            CurrentOpCode = opcode.Key;
-            CurrentInstruction = opcode.Value;
-
-            Logger.Information($"Executing instruction {CurrentOpCode.Name}");
-
-            ProgramCounter++;
-
-            CurrentInstruction.Execute(CurrentOpCode.OpcodeByte, CurrentOpCode.AddressingMode, this);
-
-            // TODO: add interrupts
-        }
-
-        public Processor(bool addRAM = true)
-        {
-            // create logger
-            Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.File("cpu.log")
-                .MinimumLevel.Debug()
-                .CreateLogger();
-
-            ConfigureInstructions();
-
-            Bus = new Bus();
-
-            if (addRAM)
-            {
-                Bus.Devices.Add(new RAM());
-            }
+            return sr;
         }
 
         private void ConfigureInstructions()
