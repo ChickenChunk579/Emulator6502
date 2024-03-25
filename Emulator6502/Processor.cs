@@ -397,5 +397,46 @@ namespace Emulator6502
                 }
             }
         }
+        
+        // stack helper methods
+        // push single byte to stack
+        public void PushStack(byte value)
+        {
+            WriteMemoryValue(0x100 + StackPointer--, value);
+        }
+
+        // push word to stack
+        public void PushStack(ushort value)
+        {
+            var bytes = BitConverter.GetBytes(value);
+            WriteMemoryValue(0x100 + StackPointer--, bytes[1]);
+            WriteMemoryValue(0x100 + StackPointer--, bytes[0]);
+        }
+
+        
+        // push program counter to stack
+        public void PushPCToStack()
+        {
+            PushStack((ushort)ProgramCounter);
+        }
+
+        // push status register to stack
+        public void PushSRToStack()
+        {
+            PushStack(GetFlagByte());
+        }
+
+        // pop byte from stack
+        public byte PopStackByte()
+        {
+            return ReadMemoryValue(0x100 + StackPointer++);
+        }
+
+        // pop word from stack
+        public ushort PopStackWord()
+        {
+            byte[] bytes = [ReadMemoryValue(0x100 + StackPointer++), ReadMemoryValue(0x100 + StackPointer++)];
+            return BitConverter.ToUInt16(bytes);
+        }
     }
 }
