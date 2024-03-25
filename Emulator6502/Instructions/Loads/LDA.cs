@@ -1,24 +1,25 @@
-﻿namespace Emulator6502.Instructions.Loads
+﻿using System.Reflection.Emit;
+
+namespace Emulator6502.Instructions.Loads
 {
     public class LDA : IInstruction
     {
         // lda opcodes with different addressing modes
-        public List<Opcode> Opcodes
+        public List<Operation> Opcodes
         {
-            get => new List<Opcode>()
+            get => new List<Operation>()
             {
-                new Opcode("LDA", AddressingMode.IndirectX, 0xA1, 6),
-                new Opcode("LDA", AddressingMode.IndirectY, 0xB1, 5),
+                new Operation("LDA", AddressingMode.IndirectX, OpcodeEnum.LDA_INDX, 6),
+                new Operation("LDA", AddressingMode.IndirectY, OpcodeEnum.LDA_INDY, 5),
 
-                new Opcode("LDA", AddressingMode.ZeroPage, 0xA5, 3),
-                new Opcode("LDA", AddressingMode.ZeroPageX, 0xB5, 4),
+                new Operation("LDA", AddressingMode.ZeroPage, OpcodeEnum.LDA_ZP, 3),
+                new Operation("LDA", AddressingMode.ZeroPageX, OpcodeEnum.LDA_ZPX, 4),
 
-                new Opcode("LDA", AddressingMode.AbsoluteX, 0xBD, 4),
-                new Opcode("LDA", AddressingMode.AbsoluteY, 0xB9, 4),
+                new Operation("LDA", AddressingMode.AbsoluteX, OpcodeEnum.LDA_ABSX, 4),
+                new Operation("LDA", AddressingMode.AbsoluteY, OpcodeEnum.LDA_ABSY, 4),
 
-                new Opcode("LDA", AddressingMode.Absolute, 0xAD, 4),
-                new Opcode("LDA", AddressingMode.Immediate, 0xA9, 2),
-
+                new Operation("LDA", AddressingMode.Absolute, OpcodeEnum.LDA_ABS, 4),
+                new Operation("LDA", AddressingMode.Immediate, OpcodeEnum.LDA_IMM, 2),
             };
         }
 

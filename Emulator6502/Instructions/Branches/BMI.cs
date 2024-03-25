@@ -3,9 +3,9 @@
     // branch negative
     public class BMI : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("BMI", AddressingMode.Relative, 0x30, 2, 1)
+            new Operation("BMI", AddressingMode.Relative, OpcodeEnum.BMI, 2, 1)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

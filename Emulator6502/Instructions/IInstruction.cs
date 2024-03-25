@@ -2,7 +2,7 @@
 {
     public interface IInstruction
     {
-        public List<Opcode> Opcodes { get; }
+        public List<Operation> Opcodes { get; }
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu);
     }

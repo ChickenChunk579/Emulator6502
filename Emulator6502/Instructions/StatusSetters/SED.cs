@@ -3,9 +3,9 @@ namespace Emulator6502.Instructions.StatusSetters
     // set decimal
     public class SED : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("SED", AddressingMode.Implied, 0xF8, 2)
+            new Operation("SED", AddressingMode.Implied, OpcodeEnum.SED, 2)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

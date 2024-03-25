@@ -3,9 +3,9 @@
     // branch negative clear
     public class BPL : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("BPL", AddressingMode.Relative, 0x10, 2, 1)
+            new Operation("BPL", AddressingMode.Relative, OpcodeEnum.BPL, 2, 1),
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

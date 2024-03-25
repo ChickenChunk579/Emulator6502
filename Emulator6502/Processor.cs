@@ -14,7 +14,7 @@ namespace Emulator6502
         public byte YRegister { get; set; } = 0x0;
         public byte Accumulator { get; set; } = 0x0;
 
-        public Opcode CurrentOpCode { get; set; }
+        public Operation CurrentOpCode { get; set; }
         public IInstruction CurrentInstruction { get; set; }
 
         public Logger Logger { get; set; }
@@ -37,7 +37,7 @@ namespace Emulator6502
 
         private List<IInstruction> instructions = [];
 
-        private Dictionary<Opcode, IInstruction> opcodeLookup = [];
+        private Dictionary<Operation, IInstruction> opcodeLookup = [];
 
         public Processor(bool addRAM = true)
         {

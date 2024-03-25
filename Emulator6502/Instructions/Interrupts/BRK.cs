@@ -2,9 +2,9 @@
 {
     public class BRK : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("BRK", AddressingMode.Implied, 0x00, 7)
+            new Operation("BRK", AddressingMode.Implied, OpcodeEnum.BRK, 7)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

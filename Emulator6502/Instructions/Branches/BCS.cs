@@ -4,9 +4,9 @@
     public class BCS : IInstruction
     {
         // 
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("BCS", AddressingMode.Relative, 0xB0, 2, 1)
+            new Operation("BCS", AddressingMode.Relative, OpcodeEnum.BCS, 2, 1)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

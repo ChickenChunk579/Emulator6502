@@ -3,9 +3,9 @@
     // branch carry clear
     public class BCC : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("BCC", AddressingMode.Relative, 0x90, 2, 1)
+            new Operation("BCC", AddressingMode.Relative, OpcodeEnum.BCC, 2, 1)
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

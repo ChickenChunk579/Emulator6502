@@ -1,12 +1,16 @@
-﻿namespace Emulator6502.Instructions.Bitwise
+﻿using System.Reflection.Emit;
+
+namespace Emulator6502.Instructions.Bitwise
 {
     public class BIT : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>()
+        
+        public List<Operation> Opcodes => new List<Operation>()
         {
-            new Opcode("BIT", AddressingMode.ZeroPage, 0x24, 3),
+          
+            new Operation("BIT", AddressingMode.ZeroPage, OpcodeEnum.BIT_ZP, 3),
 
-            new Opcode("BIT", AddressingMode.Absolute, 0x2C, 4),
+            new Operation("BIT", AddressingMode.Absolute, OpcodeEnum.BIT_ABS , 4),
         };
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)

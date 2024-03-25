@@ -3,9 +3,9 @@
     // branch equal / zero
     public class BEQ : IInstruction
     {
-        public List<Opcode> Opcodes => new List<Opcode>
+        public List<Operation> Opcodes => new List<Operation>
         {
-            new Opcode("BEQ", AddressingMode.Relative, 0xF0, 2, 1)
+            new Operation("BEQ", AddressingMode.Relative, OpcodeEnum.BEQ, 2, 1)
         };
 
         // branches if zero (equal) is set
