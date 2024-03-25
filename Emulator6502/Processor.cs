@@ -52,9 +52,9 @@ namespace Emulator6502
 
         public int CyclesLeft { get; set; }
 
-        private List<IInstruction> instructions;
+        private List<IInstruction> instructions = [];
 
-        private Dictionary<Opcode, IInstruction> operations;
+        private Dictionary<Opcode, IInstruction> opcodeLookup = [];
 
         public ushort ReadIRQVector()
         {
@@ -273,7 +273,6 @@ namespace Emulator6502
             // get parts of initial pc
             byte[] initialPcBytes = BitConverter.GetBytes(initialProgramCounter);
 
-
             // write bytes to reset vector
             WriteMemoryValue(0xFFFC, initialPcBytes[0]);
             WriteMemoryValue(0xFFFD, initialPcBytes[1]);
@@ -327,7 +326,7 @@ namespace Emulator6502
         {
             byte opcodeByte = ReadMemoryValue(ProgramCounter);
 
-            var opcodeLookup = this.operations.Where(op => op.Key.OpcodeByte == opcodeByte);
+            var opcodeLookup = this.opcodeLookup.Where(op => op.Key.OpcodeByte == opcodeByte);
 
             if (opcodeLookup.Count() == 0)
             {
@@ -357,10 +356,18 @@ namespace Emulator6502
                 .MinimumLevel.Debug()
                 .CreateLogger();
 
+            ConfigureInstructions();
+
             Bus = new Bus();
 
-            instructions = new List<IInstruction>();
+            if (addRAM)
+            {
+                Bus.Devices.Add(new RAM());
+            }
+        }
 
+        private void ConfigureInstructions()
+        {
             // get all instructions from classes that extend IInstruction
             var targetInterface = typeof(IInstruction);
             var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -372,7 +379,7 @@ namespace Emulator6502
                 Logger.Debug($"Found instruction {type.Name}");
 
                 // create instance of instruction
-                IInstruction instance = Activator.CreateInstance(type) as IInstruction;
+                var instance = Activator.CreateInstance(type) as IInstruction;
 
                 if (instance is null)
                 {
@@ -383,21 +390,12 @@ namespace Emulator6502
                 instructions.Add(instance);
             }
 
-            var opcodes = new Dictionary<Opcode, IInstruction>();
-
             foreach (var instruction in instructions)
             {
                 foreach (var opcode in instruction.Opcodes)
                 {
-                    opcodes.Add(opcode, instruction);
+                    opcodeLookup.Add(opcode, instruction);
                 }
-            }
-
-            operations = opcodes;
-
-            if (addRAM)
-            {
-                Bus.Devices.Add(new RAM());
             }
         }
     }
