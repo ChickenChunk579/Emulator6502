@@ -5,6 +5,8 @@ NOTE - still in very early stages of development
 # Progress
 ## Implemented instructions:
 * LDA (Load accumulator)
+* LDX (Load x)
+* LDX (Load y)
 * SEC (Set carry bit)
 * BIT (Bit test)
 * BCC (Branch carry clear)
@@ -18,6 +20,14 @@ NOTE - still in very early stages of development
 * CLI (Clear interrupts flag)
 * SEI (Set interrupts flag)
 * BRK (Break or run software interrupt)
+* BVC (Branch overflow clear)
+* BVS (Branch overflow set)
+* CLC (Clear carry bit)
+* CLD (Clear decimal bit)
+* CLV (Clear overflow flag)
+* CMP (Compare accumulator)
+* CMX (Comapre X Register)
+* CMY (Compare Y Register)
 
 ## Features
 * Unit tests (based on [sim6502](https://github.com/barryw/sim6502/blob/master/sim6502tests/ProcessorTests.cs/) tests)

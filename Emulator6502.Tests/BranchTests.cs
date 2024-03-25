@@ -103,5 +103,38 @@
 
             Assert.That(processor.ProgramCounter, Is.EqualTo(expectedValue));
         }
+
+        [TestCase(0, 1, 3)]
+        [TestCase(0x80, 0x80, 2)]
+        [TestCase(0, 0xFD, 0xFFFF)]
+        [TestCase(0x7D, 0x80, 0xFFFF)]
+        public void BVC_Program_Counter_Correct(int programCounterInitialValue, byte offset, int expectedValue)
+        {
+            var processor = new Processor();
+            Assert.That(processor.ProgramCounter, Is.EqualTo(0));
+
+            processor.LoadProgram(programCounterInitialValue, new byte[] { 0x50, offset }, programCounterInitialValue);
+            processor.NextStep();
+
+            Assert.That(processor.ProgramCounter, Is.EqualTo(expectedValue));
+        }
+
+        [TestCase(0, 1, 7)]
+        [TestCase(0x80, 0x80, 6)]
+        [TestCase(0, 0xF9, 0xFFFF)]
+        [TestCase(0x79, 0x80, 0xFFFF)]
+        public void BVS_Program_Counter_Correct(int programCounterInitialValue, byte offset, int expectedValue)
+        {
+            var processor = new Processor();
+            Assert.That(processor.ProgramCounter, Is.EqualTo(0));
+
+            processor.LoadProgram(programCounterInitialValue, new byte[] { 0xA9, 0x01, 0x69, 0x7F, 0x70, offset },
+                programCounterInitialValue);
+            processor.NextStep();
+            processor.NextStep();
+            processor.NextStep();
+
+            Assert.That(processor.ProgramCounter, Is.EqualTo(expectedValue));
+        }
     }
 }
