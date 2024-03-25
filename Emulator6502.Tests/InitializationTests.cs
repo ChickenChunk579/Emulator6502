@@ -1,5 +1,3 @@
-using Emulator6502.BusDevices;
-
 namespace Emulator6502.Tests
 {
     public class InitializationTests

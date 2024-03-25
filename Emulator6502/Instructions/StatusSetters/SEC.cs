@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Emulator6502.Instructions.StatusSetters
+﻿namespace Emulator6502.Instructions.StatusSetters
 {
     // set carry
     public class SEC : IInstruction

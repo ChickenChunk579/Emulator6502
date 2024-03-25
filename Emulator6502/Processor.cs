@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using Emulator6502.BusDevices;
+﻿using Emulator6502.BusDevices;
 using Emulator6502.Instructions;
 
 using Serilog;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Emulator6502.Instructions.Branches
+﻿namespace Emulator6502.Instructions.Branches
 {
     // branch carry set
     public class BCS : IInstruction
