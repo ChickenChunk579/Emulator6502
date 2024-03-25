@@ -22,7 +22,9 @@ namespace Emulator6502.Instructions.Interrupts
             cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, bytes[1]);
             cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, bytes[0]);
 
-            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, cpu.GetFlagByte().SetFlag(Flags.Break,true));
+            cpu.BreakFlag = true;
+
+            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, cpu.GetFlagByte());
 
             cpu.DisableInterruptsFlag = true;
              

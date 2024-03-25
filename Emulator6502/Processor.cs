@@ -1,31 +1,12 @@
-﻿using Emulator6502.BusDevices;
+﻿using System.Diagnostics.Contracts;
+using Emulator6502.BusDevices;
 using Emulator6502.Instructions;
-using Emulator6502.Instructions.Loads;
+
 using Serilog;
 using Serilog.Core;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Reflection;
-using System.Security.Authentication;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Emulator6502
 {
-    public enum Flags : byte
-    {
-        CarryBit = (1 << 0), // carry bit
-        Zero = (1 << 1), // zero
-        DisableInterrupts = (1 << 2), // disable interrupts
-        Decimal = (1 << 3), // decimal mode (unused in this impl)
-        Break = (1 << 4), // break
-        Unused = (1 << 5), // unused
-        Overflow = (1 << 6), // overflow
-        Negative = (1 << 7), // negative
-    }
-
     public class Processor
     {
         public int ProgramCounter { get; set; } = 0x0;
@@ -55,14 +36,14 @@ namespace Emulator6502
         {
             byte sr = 0x0;
 
-            sr = sr.SetFlag(Flags.CarryBit, CarryFlag);
-            sr = sr.SetFlag(Flags.Zero, ZeroFlag);
-            sr = sr.SetFlag(Flags.DisableInterrupts, DisableInterruptsFlag);
-            sr = sr.SetFlag(Flags.Break, BreakFlag);
-            sr = sr.SetFlag(Flags.Decimal, DecimalFlag);
-            sr = sr.SetFlag(Flags.Unused, UnusedFlag);
-            sr = sr.SetFlag(Flags.Overflow, OverflowFlag);
-            sr = sr.SetFlag(Flags.Negative, NegativeFlag);
+            sr.SetFlag(Flags.CarryBit, CarryFlag);
+            sr.SetFlag(Flags.Zero, ZeroFlag);
+            sr.SetFlag(Flags.DisableInterrupts, DisableInterruptsFlag);
+            sr.SetFlag(Flags.Break, BreakFlag);
+            sr.SetFlag(Flags.Decimal, DecimalFlag);
+            sr.SetFlag(Flags.Unused, UnusedFlag);
+            sr.SetFlag(Flags.Overflow, OverflowFlag);
+            sr.SetFlag(Flags.Negative, NegativeFlag);
 
             return sr;
         }
@@ -72,6 +53,8 @@ namespace Emulator6502
         public int CyclesLeft { get; set; }
 
         private List<IInstruction> instructions;
+
+        private Dictionary<Opcode, IInstruction> operations;
 
         public ushort ReadIRQVector()
         {
@@ -327,6 +310,7 @@ namespace Emulator6502
             // load the address from the reset vector
             // set pc to reset vector address
             ProgramCounter = 0xFFFC;
+
             // reset pc to addres in the reset vector
             ProgramCounter = ReadMemoryValue(ProgramCounter) | (ReadMemoryValue(ProgramCounter + 1) << 8);
 
@@ -343,23 +327,17 @@ namespace Emulator6502
         {
             byte opcodeByte = ReadMemoryValue(ProgramCounter);
 
-            foreach (IInstruction instruction in instructions)
-            {
-                foreach (Opcode opcode in instruction.Opcodes.Where(o => o.OpcodeByte == opcodeByte))
-                {
-                    CurrentInstruction = instruction;
-                    CurrentOpCode = opcode;
-                    break;
-                }
-                if (CurrentInstruction is not null) {
-                    break;
-                }
-            }
+            var opcodeLookup = this.operations.Where(op => op.Key.OpcodeByte == opcodeByte);
 
-            if (CurrentInstruction == null)
+            if (opcodeLookup.Count() == 0)
             {
                 throw new NotSupportedException($"Unsupported or illegal opcode {opcodeByte:X2}");
             }
+
+            var opcode = opcodeLookup.Single();
+
+            CurrentOpCode = opcode.Key;
+            CurrentInstruction = opcode.Value;
 
             Logger.Information($"Executing instruction {CurrentOpCode.Name}");
 
@@ -388,6 +366,7 @@ namespace Emulator6502
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => targetInterface.IsAssignableFrom(p) && !p.IsInterface);
+
             foreach (Type type in types)
             {
                 Logger.Debug($"Found instruction {type.Name}");
@@ -403,6 +382,18 @@ namespace Emulator6502
                 // add to list
                 instructions.Add(instance);
             }
+
+            var opcodes = new Dictionary<Opcode, IInstruction>();
+
+            foreach (var instruction in instructions)
+            {
+                foreach (var opcode in instruction.Opcodes)
+                {
+                    opcodes.Add(opcode, instruction);
+                }
+            }
+
+            operations = opcodes;
 
             if (addRAM)
             {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Emulator6502
+﻿namespace Emulator6502
 {
     public static class ExtentionMethods
     {
@@ -13,7 +7,7 @@ namespace Emulator6502
             return (b & (byte)flag) > 0;
         }
 
-        public static byte SetFlag(this byte b, Flags flag, bool value)
+        public static void SetFlag(this ref byte b, Flags flag, bool value)
         {
             if (value)
             {
@@ -22,8 +16,6 @@ namespace Emulator6502
             {
                 b &= (byte)~(byte)flag;
             }
-
-            return b;
         }
     }
 }
