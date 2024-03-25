@@ -16,13 +16,11 @@ namespace Emulator6502
 
         public StatusRegister SR {get; set;} = new();
 
-        public Operation CurrentOpCode { get; set; }
+        public Operation CurrentOperation { get; set; }
         public IInstruction CurrentInstruction { get; set; }
 
         public Logger Logger { get; set; }
         public Bus Bus { get; set; }
-
-
 
         public int CyclesLeft { get; set; }
 
@@ -65,7 +63,7 @@ namespace Emulator6502
             ProgramCounter = ReadMemoryValue(ProgramCounter) | (ReadMemoryValue(ProgramCounter + 1) << 8);
 
             // reset current opcode and instruction
-            CurrentOpCode = null;
+            CurrentOperation = null;
             CurrentInstruction = null;
 
             // TODO: add interrupts
@@ -122,14 +120,14 @@ namespace Emulator6502
 
             var opcode = opcodeLookup.Single();
 
-            CurrentOpCode = opcode.Key;
+            CurrentOperation = opcode.Key;
             CurrentInstruction = opcode.Value;
 
-            Logger.Information($"Executing instruction {CurrentOpCode.Name}");
+            Logger.Information($"Executing instruction {CurrentOperation.Name}");
 
             ProgramCounter++;
 
-            CurrentInstruction.Execute(CurrentOpCode.OpcodeByte, CurrentOpCode.AddressingMode, this);
+            CurrentInstruction.Execute(CurrentOperation.OpcodeByte, CurrentOperation.AddressingMode, this);
 
             // TODO: add interrupts
         }
@@ -160,7 +158,7 @@ namespace Emulator6502
         // takes an addressing mode and reads an address for that instruction
         public int GetAddressByAddressingMode(AddressingMode addressingMode)
         {
-            int address;
+            int lowByte;
             int highByte;
             switch (addressingMode)
             {
@@ -170,51 +168,51 @@ namespace Emulator6502
                     }
                 case AddressingMode.AbsoluteX:
                     {
-                        //Get the low half of the address
-                        address = ReadMemoryValue(ProgramCounter++);
+                        //Get the low byte
+                        lowByte = ReadMemoryValue(ProgramCounter++);
 
                         //Get the high byte
                         highByte = ReadMemoryValue(ProgramCounter++);
 
                         //We crossed a page boundary, so an extra read has occurred.
                         //However, if this is an ASL, LSR, DEC, INC, ROR, ROL or STA operation, we do not decrease it by 1.
-                        if (address + XRegister > 0xFF)
-                            switch (CurrentOpCode.OpcodeByte)
+                        if (lowByte + XRegister > 0xFF)
+                            switch (CurrentOperation.OpcodeEnum)
                             {
-                                case 0x1E:
-                                case 0xDE:
-                                case 0xFE:
-                                case 0x5E:
-                                case 0x3E:
-                                case 0x7E:
-                                case 0x9D:
+                                case OpcodeEnum.ASL_ABSX:
+                                case OpcodeEnum.DEC_ABSX:
+                                case OpcodeEnum.INC_ABSX:
+                                case OpcodeEnum.LSR_ABSX:
+                                case OpcodeEnum.ROR_ABSX:
+                                case OpcodeEnum.ROL_ABSX:
+                                case OpcodeEnum.STA_ABSX:
                                     {
                                         //This is a Read Fetch Write Operation, so we don't make the extra read.
-                                        return (((highByte << 8) | address) + XRegister) & 0xFFFF;
+                                        return (((highByte << 8) | lowByte) + XRegister) & 0xFFFF;
                                     }
                                 default:
                                     {
-                                        ReadMemoryValue((((highByte << 8) | address) + XRegister - 0xFF) & 0xFFFF);
+                                        ReadMemoryValue((((highByte << 8) | lowByte) + XRegister - 0xFF) & 0xFFFF);
                                         break;
                                     }
                             }
 
-                        return (((highByte << 8) | address) + XRegister) & 0xFFFF;
+                        return (((highByte << 8) | lowByte) + XRegister) & 0xFFFF;
                     }
                 case AddressingMode.AbsoluteY:
                     {
                         //Get the low half of the address
-                        address = ReadMemoryValue(ProgramCounter++);
+                        lowByte = ReadMemoryValue(ProgramCounter++);
 
                         //Get the high byte
                         highByte = ReadMemoryValue(ProgramCounter++);
 
                         //We crossed a page boundary, so decrease the number of cycles by 1 if the operation is not STA
-                        if (address + YRegister > 0xFF && CurrentOpCode.OpcodeByte != 0x99)
-                            ReadMemoryValue((((highByte << 8) | address) + YRegister - 0xFF) & 0xFFFF);
+                        if (lowByte + YRegister > 0xFF && CurrentOperation.OpcodeEnum != OpcodeEnum.STA_ABSY)
+                            ReadMemoryValue((((highByte << 8) | lowByte) + YRegister - 0xFF) & 0xFFFF);
 
                         //Bitshift the high byte into place, AND with $FFFF to handle wrapping.
-                        return (((highByte << 8) | address) + YRegister) & 0xFFFF;
+                        return (((highByte << 8) | lowByte) + YRegister) & 0xFFFF;
                     }
                 case AddressingMode.Immediate:
                     {
@@ -223,22 +221,22 @@ namespace Emulator6502
                 case AddressingMode.IndirectX:
                     {
                         //Get the location of the address to retrieve
-                        address = ReadMemoryValue(ProgramCounter++);
-                        ReadMemoryValue(address);
+                        lowByte = ReadMemoryValue(ProgramCounter++);
+                        ReadMemoryValue(lowByte);
 
-                        address += XRegister;
+                        lowByte += XRegister;
 
                         //Now get the final Address. The is not a zero page address either.
-                        var finalAddress = ReadMemoryValue(address & 0xFF) | (ReadMemoryValue((address + 1) & 0xFF) << 8);
+                        var finalAddress = ReadMemoryValue(lowByte & 0xFF) | (ReadMemoryValue((lowByte + 1) & 0xFF) << 8);
                         return finalAddress;
                     }
                 case AddressingMode.IndirectY:
                     {
-                        address = ReadMemoryValue(ProgramCounter++);
+                        lowByte = ReadMemoryValue(ProgramCounter++);
 
-                        var finalAddress = ReadMemoryValue(address) + (ReadMemoryValue((address + 1) & 0xFF) << 8);
+                        var finalAddress = ReadMemoryValue(lowByte) + (ReadMemoryValue((lowByte + 1) & 0xFF) << 8);
 
-                        if ((finalAddress & 0xFF) + YRegister > 0xFF && CurrentOpCode.OpcodeByte != 0x91)
+                        if ((finalAddress & 0xFF) + YRegister > 0xFF && CurrentOperation.OpcodeByte != 0x91)
                             ReadMemoryValue((finalAddress + YRegister - 0xFF) & 0xFFFF);
 
                         return (finalAddress + YRegister) & 0xFFFF;
@@ -249,35 +247,35 @@ namespace Emulator6502
                     }
                 case AddressingMode.ZeroPage:
                     {
-                        address = ReadMemoryValue(ProgramCounter++);
-                        return address;
+                        lowByte = ReadMemoryValue(ProgramCounter++);
+                        return lowByte;
                     }
                 case AddressingMode.ZeroPageX:
                     {
-                        address = ReadMemoryValue(ProgramCounter++);
-                        ReadMemoryValue(address);
+                        lowByte = ReadMemoryValue(ProgramCounter++);
+                        ReadMemoryValue(lowByte);
 
-                        address += XRegister;
-                        address &= 0xFF;
+                        lowByte += XRegister;
+                        lowByte &= 0xFF;
 
                         //This address wraps if its greater than 0xFF
-                        if (address > 0xFF)
+                        if (lowByte > 0xFF)
                         {
-                            address -= 0x100;
-                            return address;
+                            lowByte -= 0x100;
+                            return lowByte;
                         }
 
-                        return address;
+                        return lowByte;
                     }
                 case AddressingMode.ZeroPageY:
                     {
-                        address = ReadMemoryValue(ProgramCounter++);
-                        ReadMemoryValue(address);
+                        lowByte = ReadMemoryValue(ProgramCounter++);
+                        ReadMemoryValue(lowByte);
 
-                        address += YRegister;
-                        address &= 0xFF;
+                        lowByte += YRegister;
+                        lowByte &= 0xFF;
 
-                        return address;
+                        return lowByte;
                     }
                 default:
                     throw new InvalidOperationException(

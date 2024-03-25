@@ -23,7 +23,7 @@ namespace Emulator6502.Tests
             Assert.That(processor.Accumulator, Is.EqualTo(0));
             Assert.That(processor.XRegister, Is.EqualTo(0));
             Assert.That(processor.YRegister, Is.EqualTo(0));
-            Assert.That(processor.CurrentOpCode, Is.EqualTo(null));
+            Assert.That(processor.CurrentOperation, Is.EqualTo(null));
             Assert.That(processor.ProgramCounter, Is.EqualTo(0));
         }
 
