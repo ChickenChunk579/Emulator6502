@@ -23,7 +23,7 @@
             processor.LoadProgram(0, new byte[] { 0xA9, valueToLoad }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedValue));
         }
 
         [TestCase(0x00, false)]
@@ -37,7 +37,7 @@
             processor.LoadProgram(0, new byte[] { 0xA9, valueToLoad }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedValue));
         }
 
     }

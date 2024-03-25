@@ -11,7 +11,7 @@
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
             // check if carry bit is clear
-            if (cpu.NegativeFlag)
+            if (cpu.SR.NegativeFlag)
             {
                 // perform branch
                 Common.PerformBranch(opcode, addressingMode, cpu);

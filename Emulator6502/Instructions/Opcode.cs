@@ -5,8 +5,8 @@
     {
         public string Name { get; set; }
         public AddressingMode AddressingMode { get; set; }
-        public OpcodeEnum OpcodeEnum { get; set; }
 
+        public OpcodeEnum OpcodeEnum { get; set; }
         public byte OpcodeByte => (byte)OpcodeEnum;
 
         public short Cycles {get; set;}

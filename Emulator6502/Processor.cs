@@ -14,24 +14,15 @@ namespace Emulator6502
         public byte YRegister { get; set; } = 0x0;
         public byte Accumulator { get; set; } = 0x0;
 
+        public StatusRegister SR {get; set;} = new();
+
         public Operation CurrentOpCode { get; set; }
         public IInstruction CurrentInstruction { get; set; }
 
         public Logger Logger { get; set; }
         public Bus Bus { get; set; }
 
-        #region flag properties
 
-        public bool CarryFlag { get; set; }
-        public bool ZeroFlag { get; set; }
-        public bool DisableInterruptsFlag { get; set; }
-        public bool BreakFlag {get; set;}
-        public bool DecimalFlag { get; set; }
-        public bool UnusedFlag { get; set; }
-        public bool OverflowFlag { get; set; }
-        public bool NegativeFlag { get; set; }
-
-        #endregion
 
         public int CyclesLeft { get; set; }
 
@@ -294,21 +285,6 @@ namespace Emulator6502
             }
         }
 
-        // if value passed is zero set zero flag to true
-        public void SetZeroFlagByResult(byte result)
-        {
-            Log.Debug($"Zero flag set to {result == 0}");
-            ZeroFlag = result == 0;
-        }
-
-        // sets the negative flag if the intager is greater than 127 - thats how 6502 handles negatives
-        // also means if 8th bit is set (same thing)
-        public void SetNegativeFlagByResult(byte result)
-        {
-            Log.Debug($"Negative flag set to {result > 127}");
-            NegativeFlag = result > 127;
-        }
-
         // sets program counter to a relative address
         public void MoveProgramCounterByRelativeValue(int value)
         {
@@ -347,22 +323,6 @@ namespace Emulator6502
         public byte PeekStack()
         {
             return Bus.Read(StackPointer + 0x100);
-        }
-        
-        public byte GetFlagByte()
-        {
-            byte sr = 0x0;
-
-            sr.SetFlag(Flags.CarryBit, CarryFlag);
-            sr.SetFlag(Flags.Zero, ZeroFlag);
-            sr.SetFlag(Flags.DisableInterrupts, DisableInterruptsFlag);
-            sr.SetFlag(Flags.Break, BreakFlag);
-            sr.SetFlag(Flags.Decimal, DecimalFlag);
-            sr.SetFlag(Flags.Unused, UnusedFlag);
-            sr.SetFlag(Flags.Overflow, OverflowFlag);
-            sr.SetFlag(Flags.Negative, NegativeFlag);
-
-            return sr;
         }
 
         private void ConfigureInstructions()
@@ -423,7 +383,7 @@ namespace Emulator6502
         // push status register to stack
         public void PushSRToStack()
         {
-            PushStack(GetFlagByte());
+            PushStack(SR.Value);
         }
 
         // pop byte from stack

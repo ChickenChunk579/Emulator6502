@@ -18,11 +18,11 @@ namespace Emulator6502.Instructions.Comparison
                 comparedValue += 0x10000;
             }
 
-            cpu.SetZeroFlagByResult((byte)comparedValue);
+            cpu.SR.SetZeroFlagByResult((byte)comparedValue);
 
-            cpu.CarryFlag = memoryValue <= value;
+            cpu.SR.CarryFlag = memoryValue <= value;
 
-            cpu.SetNegativeFlagByResult((byte)comparedValue);
+            cpu.SR.SetNegativeFlagByResult((byte)comparedValue);
         }
     }
 }

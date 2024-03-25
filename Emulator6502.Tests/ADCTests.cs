@@ -102,7 +102,7 @@ namespace Emulator6502.Tests
             Assert.That(processor.Accumulator, Is.EqualTo(accumulatorInitialValue));
 
             processor.NextStep();
-            Assert.That(processor.CarryFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(expectedValue));
         }
 
         /*
@@ -124,7 +124,7 @@ namespace Emulator6502.Tests
             Assert.That(processor.Accumulator, Is.EqualTo(accumulatorInitialValue));
 
             processor.NextStep();
-            Assert.That(processor.CarryFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(expectedValue));
         }
         */
         // TODO: add decimal mode
@@ -145,7 +145,7 @@ namespace Emulator6502.Tests
             Assert.That(processor.Accumulator, Is.EqualTo(accumulatorInitialValue));
 
             processor.NextStep();
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedValue));
         }
 
         [TestCase(126, 1, false)]
@@ -168,7 +168,7 @@ namespace Emulator6502.Tests
             Assert.That(processor.Accumulator, Is.EqualTo(accumulatorInitialValue));
 
             processor.NextStep();
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedValue));
         }
 
         [TestCase(0, 127, false, false)]
@@ -221,7 +221,7 @@ namespace Emulator6502.Tests
             Assert.That(processor.Accumulator, Is.EqualTo(accumulatorInitialValue));
 
             processor.NextStep();
-            Assert.That(processor.OverflowFlag, Is.EqualTo(expectedValue));
+            Assert.That(processor.SR.OverflowFlag, Is.EqualTo(expectedValue));
         }
     }
 }

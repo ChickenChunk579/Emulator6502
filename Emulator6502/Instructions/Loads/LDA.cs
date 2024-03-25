@@ -30,10 +30,10 @@ namespace Emulator6502.Instructions.Loads
             cpu.Accumulator = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
 
             // Set zero flag based on value of accumulator
-            cpu.SetZeroFlagByResult(cpu.Accumulator);
+            cpu.SR.SetZeroFlagByResult(cpu.Accumulator);
 
             // Set zero flag based on value of accumulator
-            cpu.SetNegativeFlagByResult(cpu.Accumulator);
+            cpu.SR.SetNegativeFlagByResult(cpu.Accumulator);
         }
     }
 }

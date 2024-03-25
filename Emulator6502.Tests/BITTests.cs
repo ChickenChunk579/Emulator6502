@@ -25,7 +25,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x24, 0x3F, 0x3F, false)] // BIT Zero Page
@@ -71,7 +71,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.OverflowFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.OverflowFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x24, 0x00, 0x00, true)] // BIT Zero Page
@@ -93,7 +93,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
     }

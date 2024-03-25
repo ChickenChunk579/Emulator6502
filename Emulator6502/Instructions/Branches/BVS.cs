@@ -11,7 +11,7 @@
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
             // check if overflow is set
-            if (cpu.OverflowFlag)
+            if (cpu.SR.OverflowFlag)
             {
                 // perform branch
                 Common.PerformBranch(opcode, addressingMode, cpu);

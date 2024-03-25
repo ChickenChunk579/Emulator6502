@@ -29,12 +29,12 @@ namespace Emulator6502.Instructions.Arithmatic
             var memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
 
             // perform calculation
-            var newValue = memoryValue + cpu.Accumulator + (cpu.CarryFlag ? 1 : 0);
+            var newValue = memoryValue + cpu.Accumulator + (cpu.SR.CarryFlag ? 1 : 0);
 
             // set overflow flag
-            cpu.OverflowFlag = ((cpu.Accumulator ^ newValue) & 0x80) != 0 && ((cpu.Accumulator ^ memoryValue) & 0x80) == 0;
+            cpu.SR.OverflowFlag = ((cpu.Accumulator ^ newValue) & 0x80) != 0 && ((cpu.Accumulator ^ memoryValue) & 0x80) == 0;
         
-            if (cpu.DecimalFlag)
+            if (cpu.SR.DecimalFlag)
             {
                 // TODO: Add decimal mode
             } else
@@ -42,17 +42,17 @@ namespace Emulator6502.Instructions.Arithmatic
                 // set carry flag
                 if (newValue > 255)
                 {
-                    cpu.CarryFlag = true;
+                    cpu.SR.CarryFlag = true;
                     newValue -= 256;
                 } else
                 {
-                    cpu.CarryFlag = false;
+                    cpu.SR.CarryFlag = false;
                 }
             }
 
             // set zero and negative flags
-            cpu.SetNegativeFlagByResult((byte)newValue);
-            cpu.SetZeroFlagByResult((byte)newValue);
+            cpu.SR.SetNegativeFlagByResult((byte)newValue);
+            cpu.SR.SetZeroFlagByResult((byte)newValue);
 
             // set accumulator to result
             cpu.Accumulator = (byte)newValue;

@@ -21,7 +21,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
 
@@ -39,7 +39,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.CarryFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0xFE, 0xFF, true)]
@@ -56,7 +56,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
 
 
@@ -72,7 +72,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x00, 0x00, true)]
@@ -89,7 +89,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.CarryFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0xFE, 0xFF, true)]
@@ -105,7 +105,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x00, 0x00, true)]
@@ -120,7 +120,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x00, 0x00, true)]
@@ -137,7 +137,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.CarryFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0xFE, 0xFF, true)]
@@ -153,7 +153,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
     }
 }

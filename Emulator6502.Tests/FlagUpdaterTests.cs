@@ -17,7 +17,7 @@ namespace Emulator6502.Tests
             processor.LoadProgram(0, new byte[] { 0x18 }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.CarryFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(false));
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.DecimalFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.DecimalFlag, Is.EqualTo(false));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace Emulator6502.Tests
             processor.LoadProgram(0, new byte[] { 0x58 }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.DisableInterruptsFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.DisableInterruptsFlag, Is.EqualTo(false));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace Emulator6502.Tests
             processor.LoadProgram(0, new byte[] { 0xB8 }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.OverflowFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.OverflowFlag, Is.EqualTo(false));
         }
 
 

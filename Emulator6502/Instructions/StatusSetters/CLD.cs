@@ -10,7 +10,7 @@
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
-            cpu.DecimalFlag = false;
+            cpu.SR.DecimalFlag = false;
         }
     }
 }

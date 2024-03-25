@@ -12,7 +12,7 @@
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
             // check if carry bit is set
-            if (cpu.ZeroFlag)
+            if (cpu.SR.ZeroFlag)
             {
                 // perform branch
                 Common.PerformBranch(opcode, addressingMode, cpu);

@@ -24,8 +24,8 @@ namespace Emulator6502.Instructions.Bitwise
         {
             cpu.Accumulator ^= cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
 
-            cpu.SetNegativeFlagByResult(cpu.Accumulator);
-            cpu.SetZeroFlagByResult(cpu.Accumulator);
+            cpu.SR.SetNegativeFlagByResult(cpu.Accumulator);
+            cpu.SR.SetZeroFlagByResult(cpu.Accumulator);
         }
     }
 }

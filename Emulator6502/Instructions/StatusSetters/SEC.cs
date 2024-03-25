@@ -10,7 +10,7 @@
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
-            cpu.CarryFlag = true;
+            cpu.SR.CarryFlag = true;
         }
     }
 }

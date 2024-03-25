@@ -31,7 +31,7 @@ namespace Emulator6502.Tests
             processor.LoadProgram(0, new byte[] { 0xC6, 0x03, 0x00, initialMemoryValue }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x80, false)]
@@ -44,7 +44,7 @@ namespace Emulator6502.Tests
             processor.LoadProgram(0, new byte[] { 0xC6, 0x03, 0x00, initialMemoryValue }, 0x00);
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
 
 
@@ -72,7 +72,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x80, false)]
@@ -86,7 +86,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x00, 0xFF)]
@@ -113,7 +113,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.ZeroFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(expectedResult));
         }
 
         [TestCase(0x80, false)]
@@ -127,7 +127,7 @@ namespace Emulator6502.Tests
             processor.NextStep();
             processor.NextStep();
 
-            Assert.That(processor.NegativeFlag, Is.EqualTo(expectedResult));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(expectedResult));
         }
     }
 }

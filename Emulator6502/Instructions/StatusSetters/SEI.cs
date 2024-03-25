@@ -10,7 +10,7 @@ namespace Emulator6502.Instructions.StatusSetters
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
-            cpu.DisableInterruptsFlag = true;
+            cpu.SR.DisableInterruptsFlag = true;
         }
     }
 }

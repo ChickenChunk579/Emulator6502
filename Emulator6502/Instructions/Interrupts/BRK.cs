@@ -13,12 +13,12 @@
 
             cpu.PushPCToStack();
 
-            cpu.BreakFlag = true;
-            cpu.UnusedFlag = true;
+            cpu.SR.BreakFlag = true;
+            cpu.SR.UnusedFlag = true;
 
             cpu.PushSRToStack();
 
-            cpu.DisableInterruptsFlag = true;
+            cpu.SR.DisableInterruptsFlag = true;
              
             cpu.ProgramCounter = resetVector;            
         }

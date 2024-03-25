@@ -7,12 +7,12 @@ namespace Emulator6502.Tests
         {
             Processor processor = new Processor();
 
-            Assert.That(processor.CarryFlag, Is.EqualTo(false));
-            Assert.That(processor.ZeroFlag, Is.EqualTo(false));
-            Assert.That(processor.DisableInterruptsFlag, Is.EqualTo(false));
-            Assert.That(processor.DecimalFlag, Is.EqualTo(false));
-            Assert.That(processor.OverflowFlag, Is.EqualTo(false));
-            Assert.That(processor.NegativeFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.CarryFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.ZeroFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.DisableInterruptsFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.DecimalFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.OverflowFlag, Is.EqualTo(false));
+            Assert.That(processor.SR.NegativeFlag, Is.EqualTo(false));
         }
 
         [Test]

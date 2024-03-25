@@ -25,8 +25,8 @@ namespace Emulator6502.Instructions.Increment
 
             cpu.WriteMemoryValue(addressToInc, result);
 
-            cpu.SetNegativeFlagByResult(result);
-            cpu.SetZeroFlagByResult(result);
+            cpu.SR.SetNegativeFlagByResult(result);
+            cpu.SR.SetZeroFlagByResult(result);
         }
     }
 }

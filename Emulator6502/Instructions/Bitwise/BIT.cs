@@ -18,10 +18,10 @@ namespace Emulator6502.Instructions.Bitwise
             byte memoryValue = cpu.ReadMemoryValue(cpu.GetAddressByAddressingMode(addressingMode));
             int valueToCompare = memoryValue & cpu.Accumulator;
 
-            cpu.OverflowFlag = (memoryValue & 0x40) != 0;
+            cpu.SR.OverflowFlag = (memoryValue & 0x40) != 0;
 
-            cpu.SetNegativeFlagByResult(memoryValue);
-            cpu.SetZeroFlagByResult((byte)valueToCompare);
+            cpu.SR.SetNegativeFlagByResult(memoryValue);
+            cpu.SR.SetZeroFlagByResult((byte)valueToCompare);
         }
     }
 }

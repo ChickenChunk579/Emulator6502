@@ -10,7 +10,7 @@
 
         public void Execute(byte opcode, AddressingMode addressingMode, Processor cpu)
         {
-            cpu.OverflowFlag = false;
+            cpu.SR.OverflowFlag = false;
         }
     }
 }
