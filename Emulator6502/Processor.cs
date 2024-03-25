@@ -417,7 +417,7 @@ namespace Emulator6502
         // push program counter to stack
         public void PushPCToStack()
         {
-            PushStack((ushort)ProgramCounter);
+            PushStack((ushort)(ProgramCounter + 1));
         }
 
         // push status register to stack

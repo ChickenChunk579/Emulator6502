@@ -11,13 +11,12 @@
         {
             var resetVector = cpu.ReadIRQVector();
 
-            var bytes = BitConverter.GetBytes(cpu.ProgramCounter+1);
-            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, bytes[1]);
-            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, bytes[0]);
+            cpu.PushPCToStack();
 
             cpu.BreakFlag = true;
+            cpu.UnusedFlag = true;
 
-            cpu.WriteMemoryValue(0x100 + cpu.StackPointer--, cpu.GetFlagByte());
+            cpu.PushSRToStack();
 
             cpu.DisableInterruptsFlag = true;
              
