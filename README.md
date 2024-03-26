@@ -35,6 +35,8 @@ NOTE - still in very early stages of development
 * INC (Increment memory value)
 * INX (Increment x register)
 * INY (Increment y register)
+* JMP (Jump)
+* JSR (Jump subroutine)
 
 ## Features
 * Unit tests (based on [sim6502](https://github.com/barryw/sim6502/blob/master/sim6502tests/ProcessorTests.cs/) tests)
