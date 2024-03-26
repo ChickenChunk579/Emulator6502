@@ -44,5 +44,48 @@ namespace Emulator6502.Tests
 
             Assert.That(processor.ProgramCounter, Is.EqualTo(0x0203));
         }
+
+
+        [Test]
+        public void JSR_Stack_Loads_Correct_Value()
+        {
+            var processor = new Processor();
+
+            processor.LoadProgram(0xBBAA, new byte[] { 0x20, 0xCC, 0xCC }, 0xBBAA);
+
+            var stackLocation = processor.StackPointer;
+            processor.NextStep();
+
+
+            Assert.That(processor.ReadMemoryValue(stackLocation + 0x100), Is.EqualTo(0xBB));
+            Assert.That(processor.ReadMemoryValue(stackLocation + 0x100 - 1), Is.EqualTo(0xAC));
+        }
+
+        [Test]
+        public void JSR_Program_Counter_Correct()
+        {
+            var processor = new Processor();
+
+            processor.LoadProgram(0xBBAA, new byte[] { 0x20, 0xCC, 0xCC }, 0xBBAA);
+            processor.NextStep();
+
+
+            Assert.That(processor.ProgramCounter, Is.EqualTo(0xCCCC));
+        }
+
+
+        [Test]
+        public void JSR_Stack_Pointer_Correct()
+        {
+            var processor = new Processor();
+
+            processor.LoadProgram(0xBBAA, new byte[] { 0x20, 0xCC, 0xCC }, 0xBBAA);
+
+            var stackLocation = processor.StackPointer;
+            processor.NextStep();
+
+
+            Assert.That(processor.StackPointer, Is.EqualTo(stackLocation - 2));
+        }
     }
 }
