@@ -22,7 +22,7 @@ namespace Emulator6502
         public Logger Logger { get; set; }
         public Bus Bus { get; set; }
 
-        public int CyclesLeft { get; set; }
+        public int Cycles { get; set; } = 0;
 
         private List<IInstruction> instructions = [];
 
@@ -109,27 +109,42 @@ namespace Emulator6502
 
         public void NextStep()
         {
-            byte opcodeByte = ReadMemoryValue(ProgramCounter);
+            Cycle();
 
-            var opcodeLookup = this.opcodeLookup.Where(op => op.Key.OpcodeByte == opcodeByte);
+            do { Cycle(); } while (Cycles != 0);
+        }
 
-            if (opcodeLookup.Count() == 0)
+        // Performs a cycle
+        public void Cycle()
+        {
+            if (Cycles == 0)
             {
-                throw new NotSupportedException($"Unsupported or illegal opcode {opcodeByte:X2}");
+                byte opcodeByte = ReadMemoryValue(ProgramCounter);
+
+                var opcodeLookup = this.opcodeLookup.Where(op => op.Key.OpcodeByte == opcodeByte);
+
+                if (opcodeLookup.Count() == 0)
+                {
+                    throw new NotSupportedException($"Unsupported or illegal opcode {opcodeByte:X2}");
+                }
+
+                var opcode = opcodeLookup.Single();
+
+                CurrentOperation = opcode.Key;
+                CurrentInstruction = opcode.Value;
+                Cycles = CurrentOperation.Cycles;
+
+                Logger.Information($"Executing instruction {CurrentOperation.Name}");
+
+                ProgramCounter++;
+
+                CurrentInstruction.Execute(CurrentOperation, this);
+
+                // TODO: add interrupts
+            } else
+            {
+                Cycles--;
             }
-
-            var opcode = opcodeLookup.Single();
-
-            CurrentOperation = opcode.Key;
-            CurrentInstruction = opcode.Value;
-
-            Logger.Information($"Executing instruction {CurrentOperation.Name}");
-
-            ProgramCounter++;
-
-            CurrentInstruction.Execute(CurrentOperation, this);
-
-            // TODO: add interrupts
         }
 
         public ushort ReadIRQVector()
@@ -193,7 +208,9 @@ namespace Emulator6502
                                     }
                                 default:
                                     {
-                                        ReadMemoryValue((((highByte << 8) | lowByte) + XRegister - 0xFF) & 0xFFFF);
+                                        Console.WriteLine("ABSX Extra cycle");
+                                        Cycles++;
+                                        //ReadMemoryValue((((highByte << 8) | lowByte) + XRegister - 0xFF) & 0xFFFF);
                                         break;
                                     }
                             }
@@ -210,7 +227,11 @@ namespace Emulator6502
 
                         //We crossed a page boundary, so decrease the number of cycles by 1 if the operation is not STA
                         if (lowByte + YRegister > 0xFF && CurrentOperation.OpcodeEnum != OpcodeEnum.STA_ABSY)
-                            ReadMemoryValue((((highByte << 8) | lowByte) + YRegister - 0xFF) & 0xFFFF);
+                        {
+                            //ReadMemoryValue((((highByte << 8) | lowByte) + YRegister - 0xFF) & 0xFFFF);
+                            Cycles++;
+                            Console.WriteLine("ABSX Extra cycle");
+                        }
 
                         //Bitshift the high byte into place, AND with $FFFF to handle wrapping.
                         return (((highByte << 8) | lowByte) + YRegister) & 0xFFFF;
@@ -306,7 +327,17 @@ namespace Emulator6502
                 newProgramCounter++;
             }
 
-            // TODO: crossed page boundy then increment cycles
+            // check for pass page boundry
+            Console.WriteLine("Old page: " + (ProgramCounter & 0xFF00).ToString("X2"));
+            Console.WriteLine("New page: " + (newProgramCounter & 0xFF00).ToString("X2"));
+            Console.WriteLine("Old PC: " + ProgramCounter.ToString("X4"));
+            Console.WriteLine("New PC: " + newProgramCounter.ToString("X4"));
+            if ((ProgramCounter & 0xFF00) != (newProgramCounter & 0xFF00))
+            {
+                // The branch crosses a page boundary.
+                Console.WriteLine("Extra cycle");
+                Cycles++;
+            }
 
             ProgramCounter = newProgramCounter;
             ReadMemoryValue(ProgramCounter);

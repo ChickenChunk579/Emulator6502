@@ -6,6 +6,8 @@
         {
             int addressOffset = cpu.ReadMemoryValue(cpu.GetAddressForOperation(operation));
 
+            Console.WriteLine(addressOffset);
+
             cpu.MoveProgramCounterByRelativeValue(addressOffset);
         }
     }
