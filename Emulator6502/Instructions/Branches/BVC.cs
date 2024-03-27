@@ -1,11 +1,13 @@
-﻿namespace Emulator6502.Instructions.Branches
+﻿using Emulator6502.Instructions.Bitwise;
+
+namespace Emulator6502.Instructions.Branches
 {
     // branch overflow clear
     public class BVC : IInstruction
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("BVC", AddressingMode.Relative, OpcodeEnum.BVC, 2, 1)
+            new Operation("BVC", AddressModeExtensions.GetRelativeAddress, OpcodeEnum.BVC, 2, 1)
         };
 
         public void Execute(Operation operation, Processor cpu)

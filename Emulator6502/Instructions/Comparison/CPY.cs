@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Emulator6502.Instructions.Bitwise;
 
 namespace Emulator6502.Instructions.Comparison
 {
@@ -11,10 +7,10 @@ namespace Emulator6502.Instructions.Comparison
     {
         public List<Operation> Opcodes => new List<Operation>()
         {
-            new Operation("CPY", AddressingMode.Immediate, OpcodeEnum.CPY_IMM, 2),
-            new Operation("CPY", AddressingMode.ZeroPage, OpcodeEnum.CPY_ZP, 3),
+            new Operation("CPY", AddressModeExtensions.GetImmediateAddress, OpcodeEnum.CPY_IMM, 2),
+            new Operation("CPY", AddressModeExtensions.GetZeroPageAddress, OpcodeEnum.CPY_ZP, 3),
 
-            new Operation("CPY", AddressingMode.Absolute, OpcodeEnum.CPY_ABS, 4),
+            new Operation("CPY", AddressModeExtensions.GetAbsoluteAddress, OpcodeEnum.CPY_ABS, 4),
         };
 
         public void Execute(Operation operation, Processor cpu)

@@ -1,11 +1,13 @@
-﻿namespace Emulator6502.Instructions.Branches
+﻿using Emulator6502.Instructions.Bitwise;
+
+namespace Emulator6502.Instructions.Branches
 {
     // branch negative
     public class BMI : IInstruction
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("BMI", AddressingMode.Relative, OpcodeEnum.BMI, 2, 1)
+            new Operation("BMI", AddressModeExtensions.GetRelativeAddress, OpcodeEnum.BMI, 2, 1)
         };
 
         public void Execute(Operation operation, Processor cpu)

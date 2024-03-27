@@ -1,4 +1,6 @@
-﻿namespace Emulator6502.Instructions.Branches
+﻿using Emulator6502.Instructions.Bitwise;
+
+namespace Emulator6502.Instructions.Branches
 {
     // branch carry set
     public class BCS : IInstruction
@@ -6,7 +8,7 @@
         // 
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("BCS", AddressingMode.Relative, OpcodeEnum.BCS, 2, 1)
+            new Operation("BCS", AddressModeExtensions.GetRelativeAddress, OpcodeEnum.BCS, 2, 1)
         };
 
         public void Execute(Operation operation, Processor cpu)

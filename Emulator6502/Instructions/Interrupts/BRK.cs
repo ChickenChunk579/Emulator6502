@@ -1,10 +1,12 @@
-﻿namespace Emulator6502.Instructions.Interrupts
+﻿using Emulator6502.Instructions.Bitwise;
+
+namespace Emulator6502.Instructions.Interrupts
 {
     public class BRK : IInstruction
     {
         public List<Operation> Opcodes => new List<Operation>
         {
-            new Operation("BRK", AddressingMode.Implied, OpcodeEnum.BRK, 7)
+            new Operation("BRK", AddressModeExtensions.GetImpliedAddress, OpcodeEnum.BRK, 7)
         };
 
         public void Execute(Operation operation, Processor cpu)
